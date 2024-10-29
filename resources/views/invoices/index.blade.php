@@ -25,6 +25,7 @@
 <link href="{{URL::asset('assets/plugins/datatable/css/responsive.dataTables.min.css')}}" rel="stylesheet">
 <link href="{{URL::asset('assets/plugins/select2/css/select2.min.css')}}" rel="stylesheet">
 @endsection
+@section('title', ' قائمة الفواتير')
 @section('content')
     <!-- row -->
     <div class="row">

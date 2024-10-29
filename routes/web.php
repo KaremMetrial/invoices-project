@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\SectionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,6 +26,10 @@ require __DIR__.'/auth.php';
 // invoices route ==========================================================
 Route::resource('/invoices', InvoiceController::class);
 // invoices route ==========================================================
+
+// sections route ==========================================================
+Route::resource('/sections', SectionController::class);
+// sections route ==========================================================
 
 Route::get('/{id}', [AdminController::class, 'index']);
 
