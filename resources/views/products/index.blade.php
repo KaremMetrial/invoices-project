@@ -1,6 +1,4 @@
 @extends('layouts.master')
-@section('css')
-@endsection
 @section('page-header')
     <!-- breadcrumb -->
     <div class="breadcrumb-header justify-content-between">
@@ -30,6 +28,7 @@
     <!-- Carousel CSS -->
     <link href="{{ asset('assets/plugins/owl-carousel/owl.carousel.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/plugins/multislider/multislider.css') }}" rel="stylesheet">
+
 @endsection
 
 @section('title', ' قائمة المنتجات')
@@ -90,7 +89,7 @@
                                 <tr>
                                     <th class="wd-15p border-bottom-0">#</th>
                                     <th class="wd-15p border-bottom-0">اسم المنتج</th>
-                                    <th class="wd-20p border-bottom-0">الوصف</th>
+                                    <th class="wd-20p border-bottom-0">اسم القسم</th>
                                     <th class="wd-20p border-bottom-0">ملاحظات</th>
                                     <th class="wd-15p border-bottom-0">العمليات</th>
                                 </tr>
@@ -100,6 +99,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $product->product_name }}</td>
+                                        <td>{{ $product->section->section_name }}</td>
                                         <td>{{ $product->description }}</td>
                                         <td>
                                             <div class="btn-icon-list">
@@ -107,10 +107,12 @@
                                                 <a class="modal-effect btn btn-primary btn-icon rounded-circle shadow-sm mx-1"
                                                     data-effect="effect-scale" data-toggle="modal" data-target="#modaldemo1"
                                                     data-id="{{ $product->id }}"
+                                                    data-section_id="{{ $product->section->id }}" 
                                                     data-product_name="{{ $product->product_name }}"
                                                     data-description="{{ $product->description }}" title="تعديل">
                                                     <i class="typcn typcn-edit text-white"></i>
                                                 </a>
+
 
 
                                                 <!-- Delete Button -->
@@ -175,26 +177,38 @@
             </div>
         </div>
         <!-- End Modal effects-->
-
         <!-- Edit Modal -->
         <div class="modal" id="modaldemo1">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content modal-content-demo">
                     <div class="modal-header">
-                        <h6 class="modal-title">تعديل قسم</h6>
+                        <h6 class="modal-title">تعديل منتج</h6>
                         <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="" method="post" id="editForm">
+                        <form action="{{ route('products.update', '') }}" method="POST" id="editForm">
                             @csrf
-                            @method('PUT')
+                            @method('PATCH')
+
                             <input type="hidden" name="id" id="id">
                             <div class="form-group">
                                 <label for="edit_product_name">اسم المنتج</label>
                                 <input class="form-control" type="text" id="edit_product_name" name="product_name">
                             </div>
+                            <div class="form-group">
+                                <label for="edit_section_name">اسم القسم</label>
+                                <select class="form-control" name="section_id" id="edit_section_name">
+                                    @foreach ($sections as $section)
+                                        <option value="{{ $section->id }}">
+                                            {{ $section->section_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
                             <div class="form-group">
                                 <label for="edit_description">ملاحظات</label>
                                 <textarea class="form-control" name="description" id="edit_description" rows="3"></textarea>
@@ -209,33 +223,38 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Delete Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-danger">
-                    <h5 class="modal-title text-white">تأكيد الحذف</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger">
+                        <h5 class="modal-title text-white">تأكيد الحذف</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('products.destroy', '') }}" method="POST" id="deleteForm">
+                        @csrf
+                        @method('DELETE')
+                        <div class="modal-body text-center">
+                            <i class="fas fa-exclamation-triangle text-danger fa-3x mb-3"></i>
+                            <h4>هل أنت متأكد من حذف المنتج؟</h4>
+                            <p class="product-name-display mb-0 text-muted"></p>
+                        </div>
+                        <div class="modal-footer justify-content-center border-0">
+                            <button type="button" class="btn btn-secondary px-4" data-dismiss="modal">إلغاء</button>
+                            <button type="submit" class="btn btn-danger px-4">حذف</button>
+                        </div>
+                    </form>
                 </div>
-                <form action="" method="POST" id="deleteForm">
-                    @csrf
-                    @method('DELETE')
-                    <div class="modal-body text-center">
-                        <i class="fas fa-exclamation-triangle text-danger fa-3x mb-3"></i>
-                        <h4>هل أنت متأكد من حذف القسم؟</h4>
-                        <p class="product-name-display mb-0 text-muted"></p>
-                    </div>
-                    <div class="modal-footer justify-content-center border-0">
-                        <button type="button" class="btn btn-secondary px-4" data-dismiss="modal">إلغاء</button>
-                        <button type="submit" class="btn btn-danger px-4">حذف</button>
-                    </div>
-                </form>
             </div>
         </div>
+
+
     </div>
+
+
 
     </div>
     <!-- row closed -->
@@ -271,42 +290,38 @@
     <script src="{{ URL::asset('assets/plugins/jquery-ui/ui/widgets/datepicker.js') }}"></script>
     <!-- Internal Select2 js-->
     <script src="{{ URL::asset('assets/plugins/select2/js/select2.min.js') }}"></script>
-    <!-- Internal Modal js-->
-    <script src="{{ URL::asset('assets/js/modal.js') }}"></script>
+
+    <!-- Internal Modal js for Edit and Delete actions -->
     <script>
         $('#modaldemo1').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
             var id = button.data('id');
-            var product_name = button.data('product_name');
+            var productName = button.data('product_name');
+            var sectionId = button.data('section_id');
             var description = button.data('description');
+
             var modal = $(this);
+            modal.find('#id').val(id);
+            modal.find('#edit_product_name').val(productName);
+            modal.find('#edit_section_name').val(sectionId);
+            modal.find('#edit_description').val(description);
 
-            // Set form action URL with proper route
-            var updateUrl = '/products/' + id;
-            modal.find('form').attr('action', updateUrl);
-
-            // Set form values
-            modal.find('.modal-body #id').val(id);
-            modal.find('.modal-body #edit_product_name').val(product_name);
-            modal.find('.modal-body #edit_description').val(description);
+            // Update the action attribute in editForm
+            modal.find('#editForm').attr('action', '{{ route('products.update', '') }}/' + id);
         });
-    </script>
-    <script>
+
+
+        // Delete Modal
         $('#deleteModal').on('show.bs.modal', function(event) {
-            const button = $(event.relatedTarget);
-            const id = button.data('id');
-            const productName = button.data('product_name');
-            const modal = $(this);
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var productName = button.data('product_name');
 
+            var modal = $(this);
             modal.find('.product-name-display').text(productName);
-            modal.find('#deleteForm').attr('action', `/products/${id}`);
-        });
 
-        // Add loading state on delete
-        $('#deleteForm').on('submit', function() {
-            $(this).find('button[type="submit"]')
-                .html('<span class="spinner-border spinner-border-sm mx-2"></span>جاري الحذف...')
-                .attr('disabled', true);
+            // Update the action attribute in deleteForm
+            modal.find('#deleteForm').attr('action', '{{ route('products.destroy', '') }}/' + id);
         });
     </script>
 @endsection

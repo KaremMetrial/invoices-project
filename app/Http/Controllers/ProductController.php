@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\Section;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -14,9 +14,23 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::select(['product_name', 'description'])->get();
-        $sections = Section::select(['id', 'section_name'])->get();
-        return view('products.index', compact('products', 'sections'));
+        $products = Product::select([
+            'id',
+            'product_name',
+            'description',
+            'section_id',
+        ])->with('section:id,section_name')->get();
+
+        $sections = Section::select([
+            'id',
+            'section_name',
+        ])->with('products:id,product_name')->get();
+
+        return view('products.index', [
+            'products' => $products,
+            'sections' => $sections,
+        ]);
+
     }
 
     /**
@@ -62,17 +76,33 @@ class ProductController extends Controller
 
     /**
      * Update the specified resource in storage.
-     */
-    public function update(Request $request, Product $product)
-    {
-        //
+     */public function update(UpdateProductRequest $request, Product $product)
+{
+    // Validate the request data
+    $validatedData = $request->validated();
+
+    // Update the product with the validated data
+    $product->update($validatedData);
+
+    // Check if the product was actually changed
+    if (!$product->wasChanged()) {
+        return redirect()->route('products.index')
+            ->with('error', 'لم يتم إجراء أي تعديلات على المنتج.');
     }
+
+    // Redirect to the products index page with a success message
+    return redirect()->route('products.index')
+        ->with('Add', 'تم تعديل المنتج بنجاح');
+}
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+        return redirect()->route('products.index')
+            ->with('Add', 'تم حذف المنتج بنجاح');
     }
 }

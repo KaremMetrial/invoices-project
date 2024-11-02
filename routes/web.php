@@ -25,15 +25,15 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 // invoices route ==========================================================
-Route::resource('/invoices', InvoiceController::class);
+Route::resource('invoices', InvoiceController::class);
 // invoices route ==========================================================
 
 // sections route ==========================================================
-Route::resource('/sections', SectionController::class);
+Route::resource('sections', SectionController::class);
 // sections route ==========================================================
 
 // products route ==========================================================
-Route::resource('/products', ProductController::class);
+Route::resource('products', ProductController::class);
 // products route ==========================================================
 
 Route::get('/{id}', [AdminController::class, 'index']);
