@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use App\Models\Product;
+use App\Models\Section;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -12,7 +14,9 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        return view('invoices.index');
+        // get all invoices
+        $invoices = Invoice::all();
+        return view('invoices.index', compact('invoices'));
     }
 
     /**
@@ -20,7 +24,10 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        //
+        // get all sections
+        $sections = Section::all();
+
+        return view('invoices.create', compact('sections'));
     }
 
     /**
@@ -62,4 +69,12 @@ class InvoiceController extends Controller
     {
         //
     }
+    public function getProducts($sectionId)
+    {
+        // Retrieve the products for the given section ID
+        $products = Product::where('section_id', $sectionId)->pluck('product_name', 'id');
+        // Return the products as JSON
+        return response()->json($products);
+    }
+
 }
