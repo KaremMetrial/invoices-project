@@ -17,15 +17,18 @@ return new class extends Migration
             $table->date('invoice_date');
             $table->date('due_date');
             $table->string('product');
-            $table->string('section');
-            $table->string('discount');
+            $table->unsignedBigInteger('section_id');
+            $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
+            $table->decimal('amount_collection', 15, 2)->nullable();
+            $table->decimal('amount_commission', 15, 2);
+            $table->decimal('discount', 15, 2);  // Added precision and scale
             $table->string('rate_vat');
-            $table->decimal('value_vat',8,2);
-            $table->decimal('total',8,2);
+            $table->decimal('value_vat', 15, 2);  // Increased precision
+            $table->decimal('total', 15, 2);       // Increased precision
             $table->string('status', 50);
             $table->integer('value_status');
             $table->text('note')->nullable();
-            $table->string('user');
+            $table->date('payment_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

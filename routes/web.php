@@ -33,11 +33,12 @@ Route::middleware('auth')->group(function () {
         // sections routes
         'sections' => SectionController::class,
         // products routes
-        'products' => ProductController::class, 
+        'products' => ProductController::class,
     ]);
+
 });
 
 // Admin Routes
-Route::get('/{id}', [AdminController::class, 'index']);
 
 require __DIR__ . '/auth.php';
+Route::get('/{id}', [AdminController::class, 'index']);

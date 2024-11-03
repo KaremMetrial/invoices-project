@@ -8,20 +8,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Invoice extends Model
 {
     use SoftDeletes;
-    protected  $table = 'invoices';
+    protected $table = 'invoices';
     protected $fillable = [
         'invoice_number',
-        'invoice_date',
-        'due_date',
+        'invoice_Date',
+        'Due_date',
         'product',
-        'section',
-        'discount',
-        'rate_vat',
-        'value_vat',
-        'total',
-        'status',
-        'value_status',
+        'section_id',
+        'Amount_collection',
+        'Amount_Commission',
+        'Discount',
+        'Value_VAT',
+        'Rate_VAT',
+        'Total',
+        'Status',
+        'Value_Status',
         'note',
-        'user',
+        'Payment_Date',
     ];
+    
+
 }
