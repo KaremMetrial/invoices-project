@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
@@ -135,7 +136,7 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
-        //
+        dd($invoice);
     }
     public function getProducts($sectionId)
     {
@@ -155,7 +156,6 @@ class InvoiceController extends Controller
 
         abort(404, 'File not found');
 
-
     }
     public function downloadAttachments($invoiceNumber, $fileName)
     {
@@ -168,7 +168,21 @@ class InvoiceController extends Controller
 
         abort(404, 'File not found');
 
+    }
 
+    public function deleteAttachments($invoiceNumber, $fileName)
+    {
+        $filePath = public_path('Attachments/' . $invoiceNumber . '/' . $fileName);
+
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+
+        InvoiceAttachment::where('invoice_number', $invoiceNumber)
+            ->where('file_name', $fileName)
+            ->delete();
+
+        return redirect()->back()->with('Add', 'تم حذف المرفق بنجاح');
     }
 
 }

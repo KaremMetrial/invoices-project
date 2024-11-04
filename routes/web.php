@@ -31,6 +31,9 @@ Route::middleware('auth')->group(function () {
     // download Attachments
     Route::get('/download-invoice-attachment/{invoiceNumber}/{fileName}', [InvoiceController::class, 'downloadAttachments']);
 
+    // delete invoice attachment
+    Route::delete('/delete-invoice-attachment/{invoiceNumber}/{fileName}', [InvoiceController::class, 'deleteAttachments'])->name('attachments.destroy');
+
     // Resource Routes
     Route::resources([
         // invoices routes
