@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Section extends Model
-{   
+{
     protected $table = 'sections';
     protected $fillable = [
         'section_name',
@@ -14,5 +14,8 @@ class Section extends Model
     ];
     public function products(){
         return $this->hasMany(Product::class);
+    }
+    public function invoices(){
+        return $this->hasMany(Invoice::class);
     }
 }

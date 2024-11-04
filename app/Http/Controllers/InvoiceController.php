@@ -19,7 +19,10 @@ class InvoiceController extends Controller
     public function index()
     {
         // get all invoices
-        $invoices = Invoice::all();
+        $invoices = Invoice::with(['section', 'product'])
+        ->latest()
+        ->get();
+
         return view('invoices.index', compact('invoices'));
     }
 
@@ -44,7 +47,7 @@ class InvoiceController extends Controller
             'invoice_number' => $request->invoice_number,
             'invoice_Date' => $request->invoice_Date,
             'Due_date' => $request->Due_date,
-            'product' => $request->product,
+            'product_id' => $request->product,
             'section_id' => $request->Section,
             'Amount_collection' => $request->Amount_collection,
             'Amount_Commission' => $request->Amount_Commission,

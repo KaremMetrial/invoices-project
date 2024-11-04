@@ -14,4 +14,7 @@ class Product extends Model
     public function section(){
         return $this->belongsTo(Section::class);
     }
+    public function invoices(){
+        return $this->hasMany(Invoice::class);
+    }
 }

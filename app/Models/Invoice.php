@@ -13,7 +13,7 @@ class Invoice extends Model
         'invoice_number',
         'invoice_Date',
         'Due_date',
-        'product',
+        'product_id',
         'section_id',
         'Amount_collection',
         'Amount_Commission',
@@ -26,6 +26,12 @@ class Invoice extends Model
         'note',
         'Payment_Date',
     ];
-    
+
+    public function section(){
+        return $this->belongsTo(Section::class);
+    }
+    public function product(){
+        return $this->belongsTo(Product::class);
+    }
 
 }
