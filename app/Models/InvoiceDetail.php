@@ -17,4 +17,8 @@ class InvoiceDetail extends Model
         'user',
         'Payment_Date',
     ];
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
 }

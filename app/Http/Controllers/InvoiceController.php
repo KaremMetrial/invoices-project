@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
 {
@@ -20,8 +21,8 @@ class InvoiceController extends Controller
     {
         // get all invoices
         $invoices = Invoice::with(['section', 'product'])
-        ->latest()
-        ->get();
+            ->latest()
+            ->get();
 
         return view('invoices.index', compact('invoices'));
     }
@@ -73,7 +74,6 @@ class InvoiceController extends Controller
             'user' => (Auth::user()->name),
         ]);
 
-
         if ($request->hasFile('pic')) {
 
             $invoice_id = Invoice::latest()->first()->id;
@@ -93,7 +93,6 @@ class InvoiceController extends Controller
             $request->pic->move(public_path('Attachments/' . $invoice_number), $imageName);
         }
 
-
         // redirect to invoices
         return redirect()->back()
             ->with('Add', 'تم اضافة الفاتورة بنجاح');
@@ -101,13 +100,21 @@ class InvoiceController extends Controller
 
     /**
      * Display the specified resource.
-     */
+    //  */
     public function show(Invoice $invoice)
     {
-        //
-    }
+        // get invoice with details , attachments , section , product
+        $invoice->load([
+            'section',
+            'product',
+            'invoiceDetails',
+            'invoiceAttachments',
+        ]);
 
+        return view('invoices.details', compact('invoice'));
+    }
     /**
+     *
      * Show the form for editing the specified resource.
      */
     public function edit(Invoice $invoice)
@@ -136,6 +143,32 @@ class InvoiceController extends Controller
         $products = Product::where('section_id', $sectionId)->pluck('product_name', 'id');
         // Return the products as JSON
         return response()->json($products);
+    }
+    public function showAttachments($invoiceNumber, $fileName)
+    {
+        $filePath = public_path('Attachments/' . $invoiceNumber . '/' . $fileName);
+        // dd($filePath);
+
+        if (file_exists($filePath)) {
+            return response()->file($filePath);
+        }
+
+        abort(404, 'File not found');
+
+
+    }
+    public function downloadAttachments($invoiceNumber, $fileName)
+    {
+        $filePath = public_path('Attachments/' . $invoiceNumber . '/' . $fileName);
+        // dd($filePath);
+
+        if (file_exists($filePath)) {
+            return response()->download($filePath);
+        }
+
+        abort(404, 'File not found');
+
+
     }
 
 }

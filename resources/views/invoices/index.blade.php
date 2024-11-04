@@ -52,33 +52,33 @@
                 </div>
                 <div class="card-body">
                     @if (session('Add'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <strong>{{ session('Add') }}</strong>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>{{ session('Add') }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
 
-                            @if (session('error'))
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>{{ session('error') }}</strong>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
+                    @if (session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>{{ session('error') }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
 
-                            @if ($errors->any())
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    @foreach ($errors->all() as $error)
-                                        <strong>{{ $error }}</strong><br>
-                                    @endforeach
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
+                    @if ($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @foreach ($errors->all() as $error)
+                                <strong>{{ $error }}</strong><br>
+                            @endforeach
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
                     <div class="table-responsive">
                         <table class="table text-md-nowrap" id="example1">
                             <thead>
@@ -105,14 +105,27 @@
                                         <td>{{ $invoice->invoice_date }}</td>
                                         <td>{{ $invoice->due_date }}</td>
                                         <td>{{ $invoice->product->product_name }}</td>
-                                        <td>{{ $invoice->section->section_name }}</td>
+                                        <td><a href="{{ route('invoices.show',$invoice->id) }}">{{ $invoice->section->section_name }}</a></td>
                                         <td>{{ $invoice->discount }}</td>
                                         <td>{{ $invoice->rate_vat }}</td>
                                         <td>{{ $invoice->value_vat }}</td>
                                         <td>{{ $invoice->total }}</td>
-                                        <td>{{ $invoice->status }}</td>
-                                        <td>{{ $invoice->note }}</td>
                                         <td>
+                                            @switch($invoice->value_status)
+                                                @case(2)
+                                                    <span class="badge badge-pill badge-danger">غير مدفوعة</span>
+                                                @break
+
+                                                @case(1)
+                                                    <span class="badge badge-pill badge-success">مدفوعة</span>
+                                                @break
+
+                                                @default
+                                                    <span class="badge badge-pill badge-warning">مدفوعة جزئيا</span>
+                                            @endswitch
+                                        </td>
+                                        <td>{{ $invoice->note }}</td>
+                                        {{-- <td>
                                             <div class="btn-icon-list">
                                                 <!-- Edit Button -->
                                                 <a class="modal-effect btn btn-primary btn-icon rounded-circle shadow-sm mx-1"
@@ -131,7 +144,7 @@
                                                     <i class="typcn typcn-trash text-white"></i>
                                                 </a>
                                             </div>
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -26,6 +26,11 @@ Route::middleware('auth')->group(function () {
     // Invoice get product Routes
     Route::get('/invoices/get-products/{sectionId}', [InvoiceController::class, 'getProducts'])->name('invoices.get-products');
 
+    // show invoices attachments
+    Route::get('/invoice-attachment/{invoiceNumber}/{fileName}', [InvoiceController::class, 'showAttachments']);
+    // download Attachments
+    Route::get('/download-invoice-attachment/{invoiceNumber}/{fileName}', [InvoiceController::class, 'downloadAttachments']);
+
     // Resource Routes
     Route::resources([
         // invoices routes

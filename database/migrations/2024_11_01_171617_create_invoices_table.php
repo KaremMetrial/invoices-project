@@ -20,12 +20,12 @@ return new class extends Migration
             $table->foreign('product_id')->references('id')->on('products')->onDelete(action: 'cascade');
             $table->unsignedBigInteger('section_id');
             $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
-            $table->decimal('amount_collection', 15, 2)->nullable();
-            $table->decimal('amount_commission', 15, 2);
-            $table->decimal('discount', 15, 2);  // Added precision and scale
+            $table->decimal('amount_collection', 20, 2)->nullable();
+            $table->decimal('amount_commission', 20, 2);
+            $table->decimal('discount', 20, 2);  // Added precision and scale
             $table->string('rate_vat');
-            $table->decimal('value_vat', 15, 2);  // Increased precision
-            $table->decimal('total', 15, 2);       // Increased precision
+            $table->decimal('value_vat', 20, 2);  // Increased precision
+            $table->decimal('total', 20, 2);       // Increased precision
             $table->string('status', 50);
             $table->integer('value_status');
             $table->text('note')->nullable();
