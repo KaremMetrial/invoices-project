@@ -140,7 +140,10 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
-        dd($invoice);
+        // delete invoice
+        $invoice->delete();
+
+        return redirect()->back()->with('Add', 'تم حذف الفاتورة بنجاح');
     }
     public function getProducts($sectionId)
     {
