@@ -16,19 +16,15 @@
 @endsection
 
 @section('css')
-    <!-- DataTables CSS -->
-    <link href="{{ asset('assets/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/plugins/datatable/css/responsive.bootstrap4.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/plugins/datatable/css/jquery.dataTables.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/plugins/datatable/css/responsive.dataTables.min.css') }}" rel="stylesheet">
-
-    <!-- Select2 CSS -->
-    <link href="{{ asset('assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
-
-    <!-- Carousel CSS -->
-    <link href="{{ asset('assets/plugins/owl-carousel/owl.carousel.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/plugins/multislider/multislider.css') }}" rel="stylesheet">
+    <!-- Internal Data table css -->
+    <link href="{{ URL::asset('assets/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('assets/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('assets/plugins/datatable/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('assets/plugins/datatable/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('assets/plugins/datatable/css/responsive.dataTables.min.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
+    <!--Internal   Notify -->
+    <link href="{{ URL::asset('assets/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
 @endsection
 
 @section('title', ' قائمة الفواتير')
@@ -37,7 +33,7 @@
     <!-- row -->
     <div class="row">
         <div class="col-xl-12">
-            <div class="card">
+            <div class="card mg-b-20">
                 <div class="card-header pb-0">
                     <div class="row">
                         <div class="col-sm-6 col-md-4 col-xl-3">
@@ -80,7 +76,8 @@
                         </div>
                     @endif
                     <div class="table-responsive">
-                        <table class="table text-md-nowrap" id="example1">
+                        <table id="example1" class="table key-buttons text-md-nowrap"
+                            data-page-length='50'style="text-align: center">
                             <thead>
                                 <tr>
                                     <th class="wd-15p border-bottom-0">#</th>
@@ -95,6 +92,7 @@
                                     <th class="wd-15p border-bottom-0">الاجمالى</th>
                                     <th class="wd-15p border-bottom-0">الحالة</th>
                                     <th class="wd-15p border-bottom-0">ملاحظات</th>
+                                    <th class="wd-15p border-bottom-0">العمليات</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -105,7 +103,9 @@
                                         <td>{{ $invoice->invoice_date }}</td>
                                         <td>{{ $invoice->due_date }}</td>
                                         <td>{{ $invoice->product->product_name }}</td>
-                                        <td><a href="{{ route('invoices.show',$invoice->id) }}">{{ $invoice->section->section_name }}</a></td>
+                                        <td><a
+                                                href="{{ route('invoices.show', $invoice->id) }}">{{ $invoice->section->section_name }}</a>
+                                        </td>
                                         <td>{{ $invoice->discount }}</td>
                                         <td>{{ $invoice->rate_vat }}</td>
                                         <td>{{ $invoice->value_vat }}</td>
@@ -125,28 +125,22 @@
                                             @endswitch
                                         </td>
                                         <td>{{ $invoice->note }}</td>
-                                        {{-- <td>
-                                            <div class="btn-icon-list">
-                                                <!-- Edit Button -->
-                                                <a class="modal-effect btn btn-primary btn-icon rounded-circle shadow-sm mx-1"
-                                                    data-effect="effect-scale" data-toggle="modal" data-target="#modaldemo1"
-                                                    data-id="{{ $invoice->id }}"
-                                                    data-invoice_number="{{ $invoice->invoice_number }}"
-                                                    data-description="{{ $invoice->description }}" title="تعديل">
-                                                    <i class="typcn typcn-edit text-white"></i>
-                                                </a>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button aria-expanded="false" aria-haspopup="true"
+                                                    class="btn ripple btn-primary btn-sm" data-toggle="dropdown"
+                                                    type="button">العمليات<i class="fas fa-caret-down ml-1"></i></button>
+                                                <div class="dropdown-menu tx-13">
+                                                    <a class="dropdown-item"
+                                                        href=" {{ route('invoices.edit', $invoice->id) }}"">تعديل
+                                                            الفاتورة</a>
 
-                                                <!-- Delete Button -->
-                                                <a class="modal-effect btn btn-danger btn-icon rounded-circle shadow-sm mx-1"
-                                                    data-effect="effect-scale" data-toggle="modal"
-                                                    data-target="#deleteModal" data-id="{{ $invoice->id }}"
-                                                    data-invoice_number="{{ $invoice->invoice_number }}" title="حذف">
-                                                    <i class="typcn typcn-trash text-white"></i>
-                                                </a>
+                                                </div>
                                             </div>
-                                        </td> --}}
+
+                                        </td>
                                     </tr>
-                                @endforeach
+@endforeach
                             </tbody>
                         </table>
                     </div>
@@ -156,63 +150,81 @@
     </div>
 
     <!-- Delete Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-danger">
-                    <h5 class="modal-title text-white">تأكيد الحذف</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="" method="POST" id="deleteForm">
-                    @csrf
-                    @method('DELETE')
-                    <div class="modal-body text-center">
-                        <i class="fas fa-exclamation-triangle text-danger fa-3x mb-3"></i>
-                        <h4>هل أنت متأكد من حذف القسم؟</h4>
-                        <p class="invoice-name-display mb-0 text-muted"></p>
-                    </div>
-                    <div class="modal-footer justify-content-center border-0">
-                        <button type="button" class="btn btn-secondary px-4" data-dismiss="modal">إلغاء</button>
-                        <button type="submit" class="btn btn-danger px-4">حذف</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-@endsection
+    <div class="modal
+                                                        fade" id="deleteModal" tabindex="-1" role="dialog"
+                                                        aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header bg-danger">
+                                                                    <h5 class="modal-title text-white">تأكيد الحذف</h5>
+                                                                    <button type="button" class="close text-white"
+                                                                        data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form action="" method="POST" id="deleteForm">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <div class="modal-body text-center">
+                                                                        <i
+                                                                            class="fas fa-exclamation-triangle text-danger fa-3x mb-3"></i>
+                                                                        <h4>هل أنت متأكد من حذف القسم؟</h4>
+                                                                        <p class="invoice-name-display mb-0 text-muted">
+                                                                        </p>
+                                                                    </div>
+                                                                    <div
+                                                                        class="modal-footer justify-content-center border-0">
+                                                                        <button type="button"
+                                                                            class="btn btn-secondary px-4"
+                                                                            data-dismiss="modal">إلغاء</button>
+                                                                        <button type="submit"
+                                                                            class="btn btn-danger px-4">حذف</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                            @endsection
 
-@section('js')
-    <!-- Internal Data tables -->
-    <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.bootstrap4.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/responsive.bootstrap4.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.bootstrap4.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/js/table-data.js') }}"></script>
+                                            @section('js')
+                                                <!-- Internal Data tables -->
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.dataTables.min.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.responsive.min.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/responsive.dataTables.min.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.bootstrap4.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.bootstrap4.min.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/pdfmake.min.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/vfs_fonts.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.responsive.min.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/datatable/js/responsive.bootstrap4.min.js') }}"></script>
+                                                <!--Internal  Datatable js -->
+                                                <script src="{{ URL::asset('assets/js/table-data.js') }}"></script>
+                                                <!--Internal  Notify js -->
+                                                <script src="{{ URL::asset('assets/plugins/notify/js/notifIt.js') }}"></script>
+                                                <script src="{{ URL::asset('assets/plugins/notify/js/notifit-custom.js') }}"></script>
+                                                <script>
+                                                    $('#deleteModal').on('show.bs.modal', function(event) {
+                                                        const button = $(event.relatedTarget);
+                                                        const id = button.data('id');
+                                                        const invoiceName = button.data('invoice_number');
+                                                        const modal = $(this);
 
-    <!-- Internal Select2 js -->
-    <script src="{{ URL::asset('assets/plugins/select2/js/select2.min.js') }}"></script>
-    <!-- Internal Modal js -->
-    <script src="{{ URL::asset('assets/js/modal.js') }}"></script>
-    <script>
-        $('#deleteModal').on('show.bs.modal', function(event) {
-            const button = $(event.relatedTarget);
-            const id = button.data('id');
-            const invoiceName = button.data('invoice_number');
-            const modal = $(this);
+                                                        modal.find('.invoice-name-display').text(invoiceName);
+                                                        modal.find('#deleteForm').attr('action', `/invoices/${id}`);
+                                                    });
 
-            modal.find('.invoice-name-display').text(invoiceName);
-            modal.find('#deleteForm').attr('action', `/invoices/${id}`);
-        });
-
-        // Add loading state on delete
-        $('#deleteForm').on('submit', function() {
-            $(this).find('button[type="submit"]')
-                .html('<span class="spinner-border spinner-border-sm mx-2"></span>جاري الحذف...')
-                .attr('disabled', true);
-        });
-    </script>
-@endsection
+                                                    // Add loading state on delete
+                                                    $('#deleteForm').on('submit', function() {
+                                                        $(this).find('button[type="submit"]')
+                                                            .html('<span class="spinner-border spinner-border-sm mx-2"></span>جاري الحذف...')
+                                                            .attr('disabled', true);
+                                                    });
+                                                </script>
+                                            @endsection

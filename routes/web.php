@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
     // Invoice get product Routes
     Route::get('/invoices/get-products/{sectionId}', [InvoiceController::class, 'getProducts'])->name('invoices.get-products');
 
+    //insert invoices attachments
+    Route::post('/InvoiceAttachments', [InvoiceController::class, 'storeAttachment']);
     // show invoices attachments
     Route::get('/invoice-attachment/{invoiceNumber}/{fileName}', [InvoiceController::class, 'showAttachments']);
     // download Attachments

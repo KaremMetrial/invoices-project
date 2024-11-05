@@ -120,7 +120,8 @@ class InvoiceController extends Controller
      */
     public function edit(Invoice $invoice)
     {
-        //
+        $sections = Section::select('id', 'section_name')->get();
+        return view('invoices.edit', compact('invoice', 'sections'));
     }
 
     /**
@@ -128,7 +129,10 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, Invoice $invoice)
     {
-        //
+
+        $invoice->update($request->all());
+
+        return redirect()->back()->with('Add', 'تم تعديل الفاتورة بنجاح');;
     }
 
     /**
@@ -185,4 +189,30 @@ class InvoiceController extends Controller
         return redirect()->back()->with('Add', 'تم حذف المرفق بنجاح');
     }
 
+    public function storeAttachment(Request $request)
+    {
+        $request->validate(
+            [
+                'file_name' => 'required|mimes:pdf,jpeg,png,jpg,gif',
+            ],
+            [
+                'file_name.required' => 'يرجى ارفاق المرفق',
+                'file_name.mimes' => 'يرجى ارفاق المرفق بصيغة صالحة',
+            ]
+        );
+        $image = $request->file('file_name');
+        $file_name = $image->getClientOriginalName();
+        $attachments = new InvoiceAttachment();
+        $attachments->file_name = $file_name;
+        $attachments->invoice_number = $request->invoice_number;
+        $attachments->created_by = Auth::user()->name;
+        $attachments->invoice_id = $request->invoice_id;
+        $attachments->save();
+
+        // move pic
+        $imageName = $request->file_name->getClientOriginalName();
+        $request->file_name->move(public_path('Attachments/' . $request->invoice_number), $imageName);
+
+        return redirect()->back()->with('Add', 'تم اضافة المرفق بنجاح');
+    }
 }
