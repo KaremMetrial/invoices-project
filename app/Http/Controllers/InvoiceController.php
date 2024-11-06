@@ -28,6 +28,31 @@ class InvoiceController extends Controller
         return view('invoices.index', compact('invoices'));
     }
 
+    public function getInvoicePaid()
+    {
+        $invoices = Invoice::with(['section', 'product'])->where('value_status', 1)->get();
+        return view('invoices.paid', compact('invoices'));
+
+    }
+
+    public function getInvoiceUnpaid()
+    {
+        $invoices = Invoice::with(['section', 'product'])->where('value_status', 2)->get();
+        return view('invoices.unpaid', compact('invoices'));
+
+    }
+
+    public function storeInvoiceArchive($id){
+        $invoice = Invoice::findOrFail($id);
+        $invoice->delete();
+        return redirect()->back()->with('Add','تم ارشفة الفاتورة بنجاح ');
+    }
+
+    public function getInvoicePartial()
+    {
+        $invoices = Invoice::with(['section', 'product'])->where('value_status', 3)->get();
+        return view('invoices.partial', compact('invoices'));
+    }
     public function getInvoiceStatus($di)
     {
 
@@ -57,7 +82,7 @@ class InvoiceController extends Controller
             'status' => $status_text,
             'payment_date' => $request->Payment_Date,
             'note' => $invoice->note,
-            'user' =>Auth::user()->name,
+            'user' => Auth::user()->name,
         ]);
 
         return redirect()->route('invoices.index')
@@ -82,16 +107,16 @@ class InvoiceController extends Controller
         // store invoice
         Invoice::create([
             'invoice_number' => $request->invoice_number,
-            'invoice_Date' => $request->invoice_Date,
-            'Due_date' => $request->Due_date,
+            'invoice_date' => $request->invoice_Date,
+            'due_date' => $request->Due_date,
             'product_id' => $request->product,
             'section_id' => $request->Section,
-            'Amount_collection' => $request->Amount_collection,
-            'Amount_Commission' => $request->Amount_Commission,
-            'Discount' => $request->Discount,
-            'Value_VAT' => $request->Value_VAT,
-            'Rate_VAT' => $request->Rate_VAT,
-            'Total' => $request->Total,
+            'amount_collection' => $request->Amount_collection,
+            'amount_commission' => $request->Amount_Commission,
+            'discount' => $request->Discount,
+            'value_vat' => $request->Value_VAT,
+            'rate_vat' => $request->Rate_VAT,
+            'total' => $request->Total,
             'status' => 'غير مدفوعة',
             'value_status' => 2,
             'note' => $request->note,
@@ -165,7 +190,22 @@ class InvoiceController extends Controller
     public function update(Request $request, Invoice $invoice)
     {
 
-        $invoice->update($request->all());
+        $invoice->update(
+            [
+                'invoice_number' => $request->invoice_number,
+                'invoice_Date' => $request->invoice_Date,
+                'Due_date' => $request->Due_date,
+                'product_id' => $request->product,
+                'section_id' => $request->Section,
+                'Amount_collection' => $request->Amount_collection,
+                'Amount_Commission' => $request->Amount_Commission,
+                'Discount' => $request->Discount,
+                'Value_VAT' => $request->Value_VAT,
+                'Rate_VAT' => $request->Rate_VAT,
+                'Total' => $request->Total,
+                'note' => $request->note,
+            ]
+        );
 
         return redirect()->back()->with('Add', 'تم تعديل الفاتورة بنجاح');
     }
@@ -175,11 +215,23 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
-        // delete invoice
-        $invoice->delete();
+        // Delete attachments directory if it exists
+        if (!empty($invoice->invoiceAttachments)) {
+            File::deleteDirectory(public_path('Attachments/' . $invoice->invoice_number));
+        }
+
+        // Force delete the invoice
+        $invoice->forceDelete();
 
         return redirect()->back()->with('Add', 'تم حذف الفاتورة بنجاح');
     }
+
+    public function getInvoiceArchive()
+    {
+        $invoices = Invoice::with('section','product', 'invoiceDetails','invoiceAttachments')->onlyTrashed()->get();
+        return view('invoices.archive', compact('invoices'));
+    }
+
     public function getProducts($sectionId)
     {
         // Retrieve the products for the given section ID

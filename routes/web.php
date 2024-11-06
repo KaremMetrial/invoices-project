@@ -42,6 +42,21 @@ Route::middleware('auth')->group(function () {
     // edit invoice status
     Route::put('/update-invoice-status/{id}', [InvoiceController::class, 'updateInvoiceStatus'])->name('invoices.update-status');
 
+    //get invoice paied status
+    Route::get('/invoice-paid', [InvoiceController::class, 'getInvoicePaid'])->name('invoices.paid');
+    //get invoice unpaied status
+    Route::get('/invoice-unpaid', [InvoiceController::class, 'getInvoiceUnpaid'])->name('invoices.unpaid');
+    ///get invoice partial paid status
+    Route::get('/invoice-partial', [InvoiceController::class, 'getInvoicePartial'])->name('invoices.partial');
+
+    //create archive
+    Route::delete('invoice-archive-store/{id}',[InvoiceController::class, 'storeInvoiceArchive'])->name('invoices.archive.store');
+
+    //invoice archive
+    Route::get('/invoice-archive', [InvoiceController::class, 'getInvoiceArchive'])->name('invoices.archive');
+
+
+
     // Resource Routes
     Route::resources([
         // invoices routes
