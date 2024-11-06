@@ -28,6 +28,13 @@ class InvoiceController extends Controller
         return view('invoices.index', compact('invoices'));
     }
 
+    public function restoreInvoiceArchive($id)
+    {
+        $invoice = Invoice::onlyTrashed()->findOrFail($id);
+        $invoice->restore();
+
+        return redirect()->back()->with('Add', 'تم استرجاع الفاتورة بنجاح');
+    }
     public function getInvoicePaid()
     {
         $invoices = Invoice::with(['section', 'product'])->where('value_status', 1)->get();

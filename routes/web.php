@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
 
     //create archive
     Route::delete('invoice-archive-store/{id}',[InvoiceController::class, 'storeInvoiceArchive'])->name('invoices.archive.store');
+    Route::put('invoice-archive-restore/{id}',[InvoiceController::class, 'restoreInvoiceArchive'])->name('invoices.archive.restore');
 
     //invoice archive
     Route::get('/invoice-archive', [InvoiceController::class, 'getInvoiceArchive'])->name('invoices.archive');

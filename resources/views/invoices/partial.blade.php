@@ -6,7 +6,7 @@
         <div class="my-auto">
             <div class="d-flex">
                 <h4 class="content-title mb-0 my-auto">الفواتير</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/
-                 قائمة الفواتير المدفوعه جزءيا</span>
+                    قائمة الفواتير المدفوعة جزئيا</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
@@ -27,7 +27,7 @@
     <link href="{{ URL::asset('assets/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
 @endsection
 
-@section('title', '  قائمة الفواتير المدفوعه جزءيا')
+@section('title', ' قائمة الفواتير المدفوعة جزئيا')
 
 @section('content')
     <!-- row -->
@@ -141,9 +141,18 @@
                                                         حالة
                                                         الدفع</a>
                                                     <a class="dropdown-item" href="" data-effect="effect-scale"
-                                                        data-toggle="modal" data-target="#deleteModal"
+                                                        data-toggle="modal" data-target="#archiveModal"
                                                         data-id="{{ $invoice->id }}"
                                                         data-invoice_name="{{ $invoice->invoice_number }}" title="حذف">
+                                                        <i class="text-info fas fa-archive">
+                                                            ارشف الفاتورة
+                                                        </i>
+                                                    </a>
+                                                    <a class="dropdown-item" href="" data-effect="effect-scale"
+                                                        data-toggle="modal" data-target="#deleteModal"
+                                                        data-id="{{ $invoice->id }}"
+                                                        data-invoice_name="{{ $invoice->invoice_number }}"
+                                                        title="حذف">
                                                         <i class="text-danger fas fa-trash-alt">
                                                             حذف الفاتورة
                                                         </i>
@@ -184,6 +193,33 @@
                     <div class="modal-footer justify-content-center border-0">
                         <button type="button" class="btn btn-secondary px-4" data-dismiss="modal">إلغاء</button>
                         <button type="submit" class="btn btn-danger px-4">حذف</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- archive Modal -->
+    <div class="modal fade" id="archiveModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title text-white">تأكيد الارشفة</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="POST" id="archiveForm">
+                    @csrf
+                    @method('DELETE')
+                    <div class="modal-body text-center">
+                        <i class="fas fa-exclamation-triangle text-info fa-3x mb-3"></i>
+                        <h4>هل أنت متأكد من ارشفة الفاتورة؟</h4>
+                        <p class="invoice-name-display mb-0 text-muted"></p>
+                    </div>
+                    <div class="modal-footer justify-content-center border-0">
+                        <button type="button" class="btn btn-secondary px-4" data-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-info px-4">ارشف</button>
                     </div>
                 </form>
             </div>
@@ -233,20 +269,20 @@
         });
     </script>
     <script>
-        $('#deleteModal').on('show.bs.modal', function(event) {
+        $('#archiveModal').on('show.bs.modal', function(event) {
             const button = $(event.relatedTarget);
             const id = button.data('id');
             const invoiceName = button.data('invoice_name');
             const modal = $(this);
 
             modal.find('.invoice-name-display').text(invoiceName);
-            modal.find('#deleteForm').attr('action', `/invoices/${id}`);
+            modal.find('#archiveForm').attr('action', `/invoice-archive-store/${id}`);
         });
 
-        // Add loading state on delete
-        $('#deleteForm').on('submit', function() {
+        // Add loading state on archive
+        $('#archiveForm').on('submit', function() {
             $(this).find('button[type="submit"]')
-                .html('<span class="spinner-border spinner-border-sm mx-2"></span>جاري الحذف...')
+                .html('<span class="spinner-border spinner-border-sm mx-2"></span>جاري الارشفة...')
                 .attr('disabled', true);
         });
     </script>
