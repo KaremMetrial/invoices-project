@@ -36,6 +36,12 @@ Route::middleware('auth')->group(function () {
     // delete invoice attachment
     Route::delete('/delete-invoice-attachment/{invoiceNumber}/{fileName}', [InvoiceController::class, 'deleteAttachments'])->name('attachments.destroy');
 
+    // edit invoice status
+    Route::get('/edit-invoice-status/{id}', [InvoiceController::class, 'getInvoiceStatus'])->name('invoices.get-status');
+
+    // edit invoice status
+    Route::put('/update-invoice-status/{id}', [InvoiceController::class, 'updateInvoiceStatus'])->name('invoices.update-status');
+
     // Resource Routes
     Route::resources([
         // invoices routes

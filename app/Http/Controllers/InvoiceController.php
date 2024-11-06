@@ -28,6 +28,41 @@ class InvoiceController extends Controller
         return view('invoices.index', compact('invoices'));
     }
 
+    public function getInvoiceStatus($di)
+    {
+
+        $invoice = Invoice::findOrFail($di);
+        return view('invoices.status', compact('invoice'));
+
+    }
+
+    public function updateInvoiceStatus(Request $request, $id)
+    {
+        $invoice = Invoice::findOrFail($id);
+
+        $status_text = $request->status == 1 ? 'مدفوعة' : ($request->status == 2 ? 'غير مدفوعة' : 'مدفوعة جزئيا');
+
+        $invoice->update([
+            'value_status' => $request->status,
+            'payment_date' => $request->Payment_Date,
+            'status' => $status_text,
+        ]);
+
+        InvoiceDetail::create([
+            'invoice_id' => $id,
+            'invoice_number' => $invoice->invoice_number,
+            'product' => $invoice->product->id,
+            'section' => $invoice->section->id,
+            'value_status' => $request->status,
+            'status' => $status_text,
+            'payment_date' => $request->Payment_Date,
+            'note' => $invoice->note,
+            'user' =>Auth::user()->name,
+        ]);
+
+        return redirect()->route('invoices.index')
+            ->with('Add', 'تم تحديث حالة دفع الفاتورة بنجاح');
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -57,8 +92,8 @@ class InvoiceController extends Controller
             'Value_VAT' => $request->Value_VAT,
             'Rate_VAT' => $request->Rate_VAT,
             'Total' => $request->Total,
-            'Status' => 'غير مدفوعة',
-            'Value_Status' => 2,
+            'status' => 'غير مدفوعة',
+            'value_status' => 2,
             'note' => $request->note,
         ]);
 
@@ -132,7 +167,7 @@ class InvoiceController extends Controller
 
         $invoice->update($request->all());
 
-        return redirect()->back()->with('Add', 'تم تعديل الفاتورة بنجاح');;
+        return redirect()->back()->with('Add', 'تم تعديل الفاتورة بنجاح');
     }
 
     /**

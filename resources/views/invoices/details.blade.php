@@ -193,7 +193,7 @@
                                                                                             class="badge badge-pill badge-warning">{{ $x->status }}</span>
                                                                                     </td>
                                                                                 @endif
-                                                                                <td>{{ $x->Payment_Date }}</td>
+                                                                                <td>{{ $x->payment_date }}</td>
                                                                                 <td>{{ $x->note }}</td>
                                                                                 <td>{{ $x->created_at }}</td>
                                                                                 <td>{{ $x->user }}</td>

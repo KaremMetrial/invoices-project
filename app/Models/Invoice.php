@@ -21,10 +21,10 @@ class Invoice extends Model
         'Value_VAT',
         'Rate_VAT',
         'Total',
-        'Status',
-        'Value_Status',
+        'status',
+        'value_status',
         'note',
-        'Payment_Date',
+        'payment_date',
     ];
 
     public function section(){

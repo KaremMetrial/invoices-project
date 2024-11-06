@@ -28,8 +28,8 @@ return new class extends Migration
             $table->decimal('total', 20, 2);       // Increased precision
             $table->string('status', 50);
             $table->integer('value_status');
-            $table->text('note')->nullable();
-            $table->date('payment_date')->nullable();
+            $table->text(column: 'note')->nullable();
+            $table->date(column: 'payment_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

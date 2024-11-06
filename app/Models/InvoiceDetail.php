@@ -15,7 +15,7 @@ class InvoiceDetail extends Model
         'value_status',
         'note',
         'user',
-        'Payment_Date',
+        'payment_date',
     ];
     public function invoice()
     {

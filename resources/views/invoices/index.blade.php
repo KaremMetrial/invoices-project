@@ -134,11 +134,18 @@
                                                     <a class="dropdown-item "
                                                         href=" {{ route('invoices.edit', $invoice->id) }}"">تعديل
                                                         الفاتورة</a>
-                                                    <a class="dropdown-item" href="" data-effect="effect-scale" data-toggle="modal"
-                                                        data-target="#deleteModal" data-id="{{ $invoice->id }}"
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('invoices.get-status', $invoice->id) }}"><i
+                                                            class=" text-success fas
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             fa-money-bill"></i>&nbsp;&nbsp;تغير
+                                                        حالة
+                                                        الدفع</a>
+                                                    <a class="dropdown-item" href="" data-effect="effect-scale"
+                                                        data-toggle="modal" data-target="#deleteModal"
+                                                        data-id="{{ $invoice->id }}"
                                                         data-invoice_name="{{ $invoice->invoice_number }}" title="حذف">
                                                         <i class="text-danger fas fa-trash-alt">
-                                                        حذف الفاتورة
+                                                            حذف الفاتورة
                                                         </i>
                                                     </a>
                                                 </div>
