@@ -49,10 +49,11 @@ class InvoiceController extends Controller
 
     }
 
-    public function storeInvoiceArchive($id){
+    public function storeInvoiceArchive($id)
+    {
         $invoice = Invoice::findOrFail($id);
         $invoice->delete();
-        return redirect()->back()->with('Add','تم ارشفة الفاتورة بنجاح ');
+        return redirect()->back()->with('Add', 'تم ارشفة الفاتورة بنجاح ');
     }
 
     public function getInvoicePartial()
@@ -222,20 +223,22 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
-        // Delete attachments directory if it exists
-        if (!empty($invoice->invoiceAttachments)) {
-            File::deleteDirectory(public_path('Attachments/' . $invoice->invoice_number));
-        }
 
         // Force delete the invoice
         $invoice->forceDelete();
+
+        // Delete attachments directory if it exists
+        if (!empty($invoice->invoiceAttachments)) {
+            File::deleteDirectory(public_path('Attachments/' . $invoice->invoice_number));
+            $invoice->invoiceAttachments()->delete();
+        }
 
         return redirect()->back()->with('Add', 'تم حذف الفاتورة بنجاح');
     }
 
     public function getInvoiceArchive()
     {
-        $invoices = Invoice::with('section','product', 'invoiceDetails','invoiceAttachments')->onlyTrashed()->get();
+        $invoices = Invoice::with('section', 'product', 'invoiceDetails', 'invoiceAttachments')->onlyTrashed()->get();
         return view('invoices.archive', compact('invoices'));
     }
 

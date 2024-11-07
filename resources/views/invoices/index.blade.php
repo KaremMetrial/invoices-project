@@ -157,6 +157,7 @@
                                                             حذف الفاتورة
                                                         </i>
                                                     </a>
+
                                                 </div>
                                             </div>
 
@@ -254,14 +255,13 @@
         $('#deleteModal').on('show.bs.modal', function(event) {
             const button = $(event.relatedTarget);
             const id = button.data('id');
-            const invoiceName = button.data('invoice_number');
+            const invoiceName = button.data('invoice_name');
             const modal = $(this);
 
             modal.find('.invoice-name-display').text(invoiceName);
             modal.find('#deleteForm').attr('action', `/invoices/${id}`);
         });
 
-        // Add loading state on delete
         $('#deleteForm').on('submit', function() {
             $(this).find('button[type="submit"]')
                 .html('<span class="spinner-border spinner-border-sm mx-2"></span>جاري الحذف...')
