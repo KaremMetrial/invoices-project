@@ -140,6 +140,13 @@
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              fa-money-bill"></i>&nbsp;&nbsp;تغير
                                                         حالة
                                                         الدفع</a>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('invoices.print', $invoice->id) }}">
+                                                            <i class="fas fa-print text-info"></i>&nbsp;&nbsp;طباعة فاتورة
+
+                                                        </a>
+
+
                                                     <a class="dropdown-item" href="" data-effect="effect-scale"
                                                         data-toggle="modal" data-target="#archiveModal"
                                                         data-id="{{ $invoice->id }}"

@@ -56,7 +56,8 @@ Route::middleware('auth')->group(function () {
     //invoice archive
     Route::get('/invoice-archive', [InvoiceController::class, 'getInvoiceArchive'])->name('invoices.archive');
 
-
+    //invoice print
+    Route::get('invoices.print/{id}', [InvoiceController::class, 'printInvoice'])->name('invoices.print');
 
     // Resource Routes
     Route::resources([

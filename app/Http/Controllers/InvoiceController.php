@@ -28,6 +28,12 @@ class InvoiceController extends Controller
         return view('invoices.index', compact('invoices'));
     }
 
+    public function printInvoice($id){
+        $invoice = Invoice::with(['section', 'product'])->findOrFail($id);
+
+        return view('invoices.print', compact('invoice'));;
+    }
+
     public function restoreInvoiceArchive($id)
     {
         $invoice = Invoice::onlyTrashed()->findOrFail($id);
