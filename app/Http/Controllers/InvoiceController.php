@@ -8,10 +8,11 @@ use App\Models\InvoiceAttachment;
 use App\Models\InvoiceDetail;
 use App\Models\Product;
 use App\Models\Section;
+use App\Models\User;
+use App\Notifications\AddInvoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
 {
@@ -28,10 +29,11 @@ class InvoiceController extends Controller
         return view('invoices.index', compact('invoices'));
     }
 
-    public function printInvoice($id){
+    public function printInvoice($id)
+    {
         $invoice = Invoice::with(['section', 'product'])->findOrFail($id);
 
-        return view('invoices.print', compact('invoice'));;
+        return view('invoices.print', compact('invoice'));
     }
 
     public function restoreInvoiceArchive($id)
@@ -167,6 +169,8 @@ class InvoiceController extends Controller
             $imageName = $request->pic->getClientOriginalName();
             $request->pic->move(public_path('Attachments/' . $invoice_number), $imageName);
         }
+
+        User::first()->notify(new AddInvoice($invoice_id));
 
         // redirect to invoices
         return redirect()->back()
