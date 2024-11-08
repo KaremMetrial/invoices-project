@@ -35,15 +35,18 @@
         <div class="col-xl-12">
             <div class="card mg-b-20">
                 <div class="card-header pb-0">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-4 col-xl-3">
-                            <a href="{{ route('invoices.create') }}" class="btn btn-primary btn-block">
+                    <div class="row d-flex justify-content-between">
+                        <div class="col d-flex justify-content-between">
+                            <a href="{{ route('invoices.create') }}" class="btn btn-primary ">
+                                <i class="fas fa-plus-circle me-2"></i>
                                 اضافة فاتورة
                             </a>
+                            <a href="{{ route('invoices.export') }}" class="btn btn-primary ">
+                                <i class="fas fa-download me-2"></i>
+                                استخراج جميع الفواتير
+                            </a>
                         </div>
-                        <div class="col">
 
-                        </div>
                     </div>
                 </div>
                 <div class="card-body">

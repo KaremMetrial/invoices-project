@@ -59,6 +59,9 @@ Route::middleware('auth')->group(function () {
     //invoice print
     Route::get('invoices.print/{id}', [InvoiceController::class, 'printInvoice'])->name('invoices.print');
 
+    // get invoice file excel
+    Route::get('invoices/export/', [InvoiceController::class, 'export'])->name('invoices.export');
+
     // Resource Routes
     Route::resources([
         // invoices routes
