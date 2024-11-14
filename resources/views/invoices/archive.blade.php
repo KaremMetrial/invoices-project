@@ -131,23 +131,31 @@
                                                     class="btn ripple btn-primary btn-sm" data-toggle="dropdown"
                                                     type="button">العمليات<i class="fas fa-caret-down ml-1"></i></button>
                                                 <div class="dropdown-menu tx-13">
-                                                    <a class="dropdown-item "
-                                                        href=" {{ route('invoices.edit', $invoice->id) }}"">تعديل
-                                                        الفاتورة</a>
+                                                    @can('invoice_edit')
+                                                        <a class="dropdown-item "
+                                                            href=" {{ route('invoices.edit', $invoice->id) }}"">تعديل
+                                                            الفاتورة</a>
+                                                    @endcan
                                                     <a class="dropdown-item"
                                                         href="{{ route('invoices.get-status', $invoice->id) }}"><i
                                                             class=" text-success fas
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              fa-money-bill"></i>&nbsp;&nbsp;تغير
                                                         حالة
                                                         الدفع</a>
+
+                                                        @can('invoice_archive')
                                                     <a class="dropdown-item" href="" data-effect="effect-scale"
                                                         data-toggle="modal" data-target="#archiveModal"
                                                         data-id="{{ $invoice->id }}"
-                                                        data-invoice_name="{{ $invoice->invoice_number }}" title="نقل الارشيف">
+                                                        data-invoice_name="{{ $invoice->invoice_number }}"
+                                                        title="نقل الارشيف">
                                                         <i class="text-info fas fa-archive">
                                                             نقل الارشيف
                                                         </i>
                                                     </a>
+                                                    @endcan
+                                                    @can('invoice_delete')
+
                                                     <a class="dropdown-item" href="" data-effect="effect-scale"
                                                         data-toggle="modal" data-target="#deleteModal"
                                                         data-id="{{ $invoice->id }}"
@@ -157,6 +165,8 @@
                                                             حذف الفاتورة
                                                         </i>
                                                     </a>
+                                                    @endcan
+
                                                 </div>
                                             </div>
 

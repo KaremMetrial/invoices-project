@@ -4,7 +4,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
@@ -74,7 +76,13 @@ Route::middleware('auth')->group(function () {
 
 });
 
-// Admin Routes
+
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
+});
+
+
 
 require __DIR__ . '/auth.php';
 Route::get('/{id}', [AdminController::class, 'index']);
