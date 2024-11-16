@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\UserController;
@@ -74,6 +75,9 @@ Route::middleware('auth')->group(function () {
         'products' => ProductController::class,
     ]);
 
+    // invoics report
+    Route::get('/invoices-reports', [ReportController::class, 'index'])->name('invoices-reports.index');
+    Route::post('/get-invoices-reports', [ReportController::class, 'report'])->name('invoices.report');
 });
 
 

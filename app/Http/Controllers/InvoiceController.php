@@ -21,6 +21,7 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index()
     {
         // get all invoices
