@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSectionRequest;
 use App\Http\Requests\UpdateSectionRequest;
+use App\Models\Product;
 use App\Models\Section;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -33,7 +34,7 @@ class SectionController extends Controller
      */
     public function store(StoreSectionRequest $request)
     {
-      
+
         // insert data
         Section::create([
             'section_name' => $request->section_name,
@@ -52,7 +53,10 @@ class SectionController extends Controller
      */
     public function show(Section $section)
     {
-        //
+        $section->load('products');
+        $product =  Product::where('section_id', $section->id)->get();
+
+        return response()->json($product);
     }
 
     /**
@@ -70,14 +74,14 @@ class SectionController extends Controller
     {
         // Update data
         $section->update($request->validated());
-    
+
         // Check if the section was actually changed
         if (!$section->wasChanged()) {
             // If no changes were made, return a message
-            session()->flash('error', 'لم يتم تعديل القسم');    
+            session()->flash('error', 'لم يتم تعديل القسم');
             return redirect()->back();
         }
-    
+
         // If changes were made, return a success message
         session()->flash('Add', "تم تعديل القسم '{$section->name}' بنجاح");
         return redirect()->route('sections.index');
@@ -91,16 +95,16 @@ class SectionController extends Controller
         try {
             $sectionName = $section->section_name;
             $section->delete();
-            
+
             return redirect()
                 ->route('sections.index')
                 ->with('Add', "تم حذف القسم '{$sectionName}' بنجاح");
-                
+
         } catch (\Exception $e) {
             return redirect()
                 ->route('sections.index')
                 ->with('error', 'حدث خطأ أثناء حذف القسم');
         }
     }
-    
+
 }

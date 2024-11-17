@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use App\Models\Section;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -45,7 +46,34 @@ class ReportController extends Controller
                 ->withDetails($invoices);
         }
 
+    }
 
+    public function usersReport(Request $request)
+    {
 
+        $sections = Section::all();
+        return view('reports.users', compact('sections'));
+    }
+
+    public function getUsersReport(Request $request)
+    {
+        // dd($request->all());
+
+        if ($request->section && $request->product && $request->start_at == '' && $request->end_at == '') {
+
+            $invoices = Invoice::select('*')->where('section_id', '=', $request->section)->where('product_id', '=', $request->product)->get();
+            $sections = Section::all();
+            return view('reports.users', compact('sections'))->withDetails($invoices);
+
+        } else {
+
+            $start_at = date($request->start_at);
+            $end_at = date($request->end_at);
+
+            $invoices = Invoice::whereBetween('invoice_Date', [$start_at, $end_at])->where('section_id', '=', $request->Section)->where('product_id', '=', $request->product)->get();
+            $sections = Section::all();
+            return view('reports.users', compact('sections'))->withDetails($invoices);
+
+        }
     }
 }

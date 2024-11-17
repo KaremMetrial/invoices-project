@@ -78,6 +78,11 @@ Route::middleware('auth')->group(function () {
     // invoics report
     Route::get('/invoices-reports', [ReportController::class, 'index'])->name('invoices-reports.index');
     Route::post('/get-invoices-reports', [ReportController::class, 'report'])->name('invoices.report');
+
+    /// users report
+    Route::get('/users-reports', [ReportController::class, 'usersReport'])->name('users-reports.index');
+    Route::post('/get-users-reports', [ReportController::class, 'getUsersReport'])->name('users.report');
+
 });
 
 
