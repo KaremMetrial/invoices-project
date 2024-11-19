@@ -228,10 +228,9 @@
 
         <div class="col-lg-12 col-xl-5">
             <div class="card card-dashboard-map-one">
-                <label class="main-content-label">Sales Revenue by Customers in USA</label>
-                <span class="d-block mg-b-20 text-muted tx-12">Sales Performance of all states in the United States</span>
-                <div class="">
-                    <div class="vmap-wrapper ht-180" id="vmap2"></div>
+                <label class="main-content-label">نسبة احصائية الفواتير</label>
+                <div class="" style="width: 100%">
+                    {!! $chart2->render() !!}
                 </div>
             </div>
         </div>

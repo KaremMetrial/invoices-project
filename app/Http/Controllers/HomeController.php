@@ -12,8 +12,9 @@ class HomeController extends Controller
         $totalInvoice = Invoice::sum('total');
         $allInvoice = Invoice::count();
         $chart = self::getCharts();
+        $chart2 = self::getCharts2();
 
-        return view("dashboard", compact("allInvoice", 'totalInvoice', 'chart'));
+        return view("dashboard", compact("allInvoice", 'totalInvoice', 'chart','chart2'));
     }
     public static function getCharts()
     {
@@ -62,5 +63,27 @@ class HomeController extends Controller
 
         return $chart;
 
+    }
+    public static function getCharts2()
+    {
+        $allInvoice = Invoice::count();
+
+        $countInvoiceUnpaid = (Invoice::where('status', 'غير مدفوعة')->count() / $allInvoice) * 100;
+        $countInvoicePaid = (Invoice::where('status', 'مدفوعة')->count() / $allInvoice) * 100;
+        $countInvoicePartial = (Invoice::where('status', 'مدفوعة جزئيا')->count() / $allInvoice) * 100;
+
+        $chartjs_2 = app()->chartjs
+            ->name('pieChartTest')
+            ->type('pie')
+            ->size(['width' => 340, 'height' => 200])
+            ->labels(['الفواتير الغير المدفوعة', 'الفواتير المدفوعة', 'الفواتير المدفوعة جزئيا'])
+            ->datasets([
+                [
+                    'backgroundColor' => ['#ec5858', '#81b214', '#ff9642'],
+                    'data' => [$countInvoiceUnpaid, $countInvoicePaid, $countInvoicePartial],
+                ],
+            ])
+            ->options([]);
+        return $chartjs_2;
     }
 }
