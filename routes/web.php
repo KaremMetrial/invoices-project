@@ -82,6 +82,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/users-reports', [ReportController::class, 'usersReport'])->name('users-reports.index');
     Route::post('/get-users-reports', [ReportController::class, 'getUsersReport'])->name('users.report');
 
+    Route::get('mark-as-read-all', [InvoiceController::class,'markAsReadAll'])->name('mark-as-read-all');
+
 });
 
 

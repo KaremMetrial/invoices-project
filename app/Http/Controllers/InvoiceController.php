@@ -10,10 +10,11 @@ use App\Models\InvoiceDetail;
 use App\Models\Product;
 use App\Models\Section;
 use App\Models\User;
-use App\Notifications\AddInvoice;
+use App\Notifications\InvoiceCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Notification;
 use Maatwebsite\Excel\Facades\Excel;
 
 class InvoiceController extends Controller
@@ -173,7 +174,19 @@ class InvoiceController extends Controller
             $request->pic->move(public_path('Attachments/' . $invoice_number), $imageName);
         }
 
-        User::first()->notify(new AddInvoice($invoice_id));
+        $users = User::all();
+        $user = Auth::user();
+
+        $details = [
+            'id' => $invoice_id,
+            'title' => 'تم اضافة فاتورة جديد بواسطة : ',
+            'body' => $user->name . ' ' . $user->email,
+            'actionText' => 'عرض الفاتورة',
+            'actionURL' => url('/invoices/' . $invoice_id),
+            'user' => $user,
+        ];
+
+        Notification::send($users, new InvoiceCreated($details));
 
         // redirect to invoices
         return redirect()->back()
@@ -183,11 +196,28 @@ class InvoiceController extends Controller
     {
         return Excel::download(new InvoicesExport, 'invoices.xlsx');
     }
+
+    public function markAsReadAll()
+    {
+        Auth::user()
+            ->unreadNotifications
+            ->markAsRead();
+
+        return back();
+    }
+
     /**
      * Display the specified resource.
     //  */
     public function show(Invoice $invoice)
     {
+
+        // Mark specific notification as read
+        Auth::user()
+            ->unreadNotifications
+            ->where('data.data.id', $invoice->id)
+            ->markAsRead();
+
         // get invoice with details , attachments , section , product
         $invoice->load([
             'section',
