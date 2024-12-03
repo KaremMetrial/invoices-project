@@ -33,19 +33,14 @@ Follow the steps below to set up and run the project locally:
     composer install
     ```
 
-4. Create a `.env` file from the `.env.example`:
 
-    ```bash
-    cp .env.example .env
-    ```
-
-5. Generate the application key:
+4. Generate the application key:
 
     ```bash
     php artisan key:generate
     ```
 
-6. Set up your database configuration in the `.env` file:
+5. Set up your database configuration in the `.env` file:
 
     ```env
     DB_CONNECTION=mysql
@@ -56,14 +51,14 @@ Follow the steps below to set up and run the project locally:
     DB_PASSWORD=your_password
     ```
 
-7. Run the database migrations and seeders:
+6. Run the database migrations and seeders:
 
     ```bash
     php artisan db:seed --class=PermissionTableSeeder
     php artisan db:seed --class=CreateAdminUserSeeder
     ```
 
-8. Serve the application:
+7. Serve the application:
 
     ```bash
     php artisan serve
